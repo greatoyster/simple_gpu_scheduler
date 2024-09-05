@@ -3,9 +3,24 @@ import os
 import argparse
 
 
-def single_gpu_multiple_tasks(commands, num_pgpus, num_vgpus):
+def single_gpu_multiple_tasks(commands, num_pgpus, num_vgpus, gpu_ids):
+    if gpu_ids == None:
+        gpu_ids = [i for i in range(num_pgpus)]
+    else:
+        gpu_ids = [
+            id
+            for part in gpu_ids.split(",")
+            for id in (
+                range(int(part.split("-")[0]), int(part.split("-")[-1]) + 1)
+                if "-" in part
+                else [int(part)]
+            )
+        ]
+        num_pgpus = len(gpu_ids)
+    num_vgpus = num_pgpus if num_vgpus == -1 else num_vgpus
+
     # Assign GPUs based on the number of GPUs specified
-    gpu_assignments = [f"export CUDA_VISIBLE_DEVICES={i}" for i in range(num_pgpus)]
+    gpu_assignments = [f"export CUDA_VISIBLE_DEVICES={i}" for i in gpu_ids]
     # Store the created processes
     processes = []
     for i in range(num_vgpus):
@@ -30,8 +45,15 @@ def _create_parser():
     parser.add_argument(
         "-f", "--commands", type=str, required=True, help="Path to command file."
     )
-    parser.add_argument(
-        "-p", "--num_pgpus", type=int, default=1, help="Number of physical GPUs to use."
+    gpu_group = parser.add_mutually_exclusive_group(required=True)
+    gpu_group.add_argument(
+        "-p", "--num_pgpus", type=int, help="Number of physical GPUs to use."
+    )
+    gpu_group.add_argument(
+        "-g",
+        "--gpu_ids",
+        type=str,
+        help="Comma-separated list of GPU IDs to use (e.g., '0,1,2'). Use '-' to specify ranges (e.g., '0,2-4,7' is equivalent to '0,2,3,4,7').",
     )
     parser.add_argument(
         "-v", "--num_vgpus", type=int, default=-1, help="Number of virtual GPUs to use."
@@ -45,5 +67,4 @@ if __name__ == "__main__":
     print(args)
     with open(args.commands, "r") as f:
         commands = [line.strip() for line in f.readlines()]
-    args.num_vgpus =  args.num_pgpus if args.num_vgpus == -1 else args.num_vgpus
-    single_gpu_multiple_tasks(commands, args.num_pgpus, args.num_vgpus)
+    single_gpu_multiple_tasks(commands, args.num_pgpus, args.num_vgpus, args.gpu_ids)
