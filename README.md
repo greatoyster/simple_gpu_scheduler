@@ -8,7 +8,7 @@ git clone https://github.com/greatoyster/simple_gpu_scheduler.git && cd simple_g
 
 # usage
 ```
-python -m sgs.run [-h] -f COMMANDS [-p NUM_PGPUS] [-v NUM_VGPUS]
+usage: run.py [-h] -f COMMANDS (-p NUM_PGPUS | -g GPU_IDS) [-v NUM_VGPUS]
 
 Run commands on multiple GPUs.
 
@@ -18,6 +18,8 @@ options:
                         Path to command file.
   -p NUM_PGPUS, --num_pgpus NUM_PGPUS
                         Number of physical GPUs to use.
+  -g GPU_IDS, --gpu_ids GPU_IDS
+                        Comma-separated list of GPU IDs to use (e.g., '0,1,2'). Use '-' to specify ranges (e.g., '0,2-4,7' is equivalent to '0,2,3,4,7').
   -v NUM_VGPUS, --num_vgpus NUM_VGPUS
                         Number of virtual GPUs to use.
 ```
