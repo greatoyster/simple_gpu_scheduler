@@ -5,6 +5,10 @@ This is a simple tool that helps you effectively utilize multiple GPUs to run ta
 ```
 git clone https://github.com/greatoyster/simple_gpu_scheduler.git && cd simple_gpu_scheduler && pip install .
 ```
+or
+```
+pip install sgs@git+https://github.com/greatoyster/simple_gpu_scheduler.git
+```
 
 # usage
 ```
