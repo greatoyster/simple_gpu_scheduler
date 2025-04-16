@@ -12,7 +12,7 @@ pip install sgs@git+https://github.com/greatoyster/simple_gpu_scheduler.git
 
 # usage
 ```
-usage: run.py [-h] -f COMMANDS (-p NUM_PGPUS | -g GPU_IDS) [-v NUM_VGPUS]
+usage: python -m sgs.run [-h] -f COMMANDS (-p NUM_PGPUS | -g GPU_IDS) [-v NUM_VGPUS]
 
 Run commands on multiple GPUs.
 
